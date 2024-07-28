@@ -1,44 +1,33 @@
 import streamlit as st
 import pandas as pd
-import random
 
-
-# Sample data: replace this with real user data or a database query
-users_data = pd.DataFrame({
-    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
-    'location': ['New York', 'New York', 'Los Angeles', 'New York', 'Los Angeles'],
-    'sport': ['Basketball', 'Soccer', 'Basketball', 'Soccer', 'Tennis']
-})
-
-import streamlit as st
-import pandas as pd
-import random
-
-# Sample data: replace this with real user data or a database query
-users_data = pd.DataFrame({
-    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
-    'location': ['New York', 'New York', 'Los Angeles', 'New York', 'Los Angeles'],
-    'sport': ['Basketball', 'Soccer', 'Basketball', 'Soccer', 'Tennis']
-})
+# Initialize the user data in the session state if it doesn't exist - these are starter values
+if 'users_data' not in st.session_state:
+    st.session_state.users_data = pd.DataFrame({
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
+        'location': ['New York', 'New York', 'Los Angeles', 'New York', 'Los Angeles'],
+        'sport': ['Basketball', 'Soccer', 'Basketball', 'Soccer', 'Tennis']
+    })
 
 # Title of the app
-st.title("Sports Matchmaking App")
+st.title("Voli: Find Your Sports Match")
 
 # Input fields for user data
 name = st.text_input("Enter your name")
 location = st.text_input("Enter your location")
-sport = st.selectbox("Choose a sport", ['Basketball', 'Soccer', 'Tennis'])
+sport = st.selectbox("Choose a sport", ['Basketball', 'Soccer', 'Tennis', 'Pickleball'])
 
 # Button to find matches
 if st.button('Find Matches'):
     if name and location and sport:
-        # Add the new user to the data
+        # Add the new user to the session state data - this is dynamically adding the user once they submit
         new_user = pd.DataFrame({'name': [name], 'location': [location], 'sport': [sport]})
-        users_data = pd.concat([users_data, new_user], ignore_index=True)
+        st.session_state.users_data = pd.concat([st.session_state.users_data, new_user], ignore_index=True)
 
         # Filter users based on location and sport, excluding the current user
-        matches = users_data[
-            (users_data['location'] == location) & (users_data['sport'] == sport) & (users_data['name'] != name)]
+        matches = st.session_state.users_data[(st.session_state.users_data['location'] == location) &
+                                              (st.session_state.users_data['sport'] == sport) &
+                                              (st.session_state.users_data['name'] != name)]
 
         # Randomly select up to 3 matches
         if not matches.empty:
