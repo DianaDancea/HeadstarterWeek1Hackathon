@@ -1,2 +1,2 @@
 # HeadstarterWeek1Hackathon
-My team's repo for the Headstarter Week1 Hackathon; we are trying to build a smaller version of our final project idea
+My for the Headstarter Week1 Hackathon; I built a smaller version of our final project idea
